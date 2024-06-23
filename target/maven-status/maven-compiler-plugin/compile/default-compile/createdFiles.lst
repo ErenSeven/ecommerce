@@ -1,5 +1,6 @@
 dao\ProductDao.class
 servlet\LogoutServlet.class
+servlet\UserOperationServlet.class
 dao\CartItemsDao.class
 login\LoginBean.class
 dao\UserDao.class

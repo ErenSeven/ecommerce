@@ -74,13 +74,13 @@
 												<a class="nav-link sidebar-link" href="categoryCRUD.jsp">Kategoriler</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link sidebar-link" href="siparisler.jsp">Siparişler</a>
+												<a class="nav-link sidebar-link" href="ordersCRUD.jsp">Siparişler</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link sidebar-link" href="urunler.jsp">Ürünler</a>
+												<a class="nav-link sidebar-link" href="productCRUD.jsp">Ürünler</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link sidebar-link" href="kullanicilar.jsp">Kullanıcılar</a>
+												<a class="nav-link sidebar-link" href="userCRUD.jsp">Kullanıcılar</a>
 											</li>
 										</ul>
 									</div>
@@ -101,21 +101,21 @@
 													<div class="card bg-light p-3">
 														<h5 class="card-title text-center mb-3">Siparişler</h5>
 														<p class="card-text text-center">Siparişleri yönetmek için tıklayın.</p>
-														<a href="siparisler.jsp" class="btn btn-primary btn-block">Siparişlere Git</a>
+														<a href="ordersCRUD.jsp" class="btn btn-primary btn-block">Siparişlere Git</a>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="card bg-light p-3">
 														<h5 class="card-title text-center mb-3">Ürünler</h5>
 														<p class="card-text text-center">Ürünleri yönetmek için tıklayın.</p>
-														<a href="urunler.jsp" class="btn btn-primary btn-block">Ürünlere Git</a>
+														<a href="productCRUD.jsp" class="btn btn-primary btn-block">Ürünlere Git</a>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="card bg-light p-3">
 														<h5 class="card-title text-center mb-3">Kullanıcılar</h5>
 														<p class="card-text text-center">Kullanıcıları yönetmek için tıklayın.</p>
-														<a href="kullanicilar.jsp" class="btn btn-primary btn-block">Kullanıcılara Git</a>
+														<a href="userCRUD.jsp" class="btn btn-primary btn-block">Kullanıcılara Git</a>
 													</div>
 												</div>
 											</div>

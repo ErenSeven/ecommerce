@@ -6,8 +6,16 @@
 <%@page import="helper.FactoryProvider"%>
 <%
 CategoryDao cdao = new CategoryDao(FactoryProvider.getFactory());
-List<Category> clist = cdao.getCategories();
+String search = request.getParameter("search");
+List<Category> clist;
+
+if (search != null && !search.trim().isEmpty()) {
+    clist = cdao.searchCategoriesByTitle(search);
+} else {
+    clist = cdao.getCategories();
+}
 %>
+
 
     <% for (Category c : clist) { %>
         <tr>

@@ -55,6 +55,15 @@ public class CategoryDao {
         session.close();
     }
     
+    public List<Category> searchCategoriesByTitle(String title) {
+        Session session = this.factory.openSession();
+        List<Category> list = session.createQuery("from Category where categoryTitle like :title")
+                                    .setParameter("title", "%" + title + "%")
+                                    .list();
+        session.close();
+        return list;
+    }
+
     public Category getCategoryById(int cid) {
         Category cat = null;
         try {

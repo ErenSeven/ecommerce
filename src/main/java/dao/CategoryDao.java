@@ -29,6 +29,16 @@ public class CategoryDao {
         return catId;
     }
 
+    public void deleteCategory(int categoryId) {
+        Session session = this.factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Category category = session.get(Category.class, categoryId);
+        if (category != null) {
+            session.delete(category);
+        }
+        tx.commit();
+        session.close();
+    }
     @SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
     public List<Category> getCategories() {
         Session s = this.factory.openSession();
@@ -37,6 +47,14 @@ public class CategoryDao {
         return list;
     }
 
+    public void updateCategory(Category category) {
+        Session session = this.factory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.update(category);
+        tx.commit();
+        session.close();
+    }
+    
     public Category getCategoryById(int cid) {
         Category cat = null;
         try {

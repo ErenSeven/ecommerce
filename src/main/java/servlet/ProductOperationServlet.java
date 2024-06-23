@@ -5,6 +5,12 @@
  */
 package servlet;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+
 import dao.CategoryDao;
 import dao.ProductDao;
 import entity.Category;
@@ -12,24 +18,19 @@ import entity.Product;
 import helper.FactoryProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-
 @MultipartConfig(// ilk sorun buradan kaynakl�. Buras� olmad���nda 400 hata kodlar� al�n�yor
         fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
         maxFileSize = 1024 * 1024 * 10, // 10 MB
         maxRequestSize = 1024 * 1024 * 100 // 100 MB
 )
+@WebServlet(urlPatterns = "/ProductOperationServlet")
 public class ProductOperationServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -45,8 +46,8 @@ public class ProductOperationServlet extends HttpServlet {
             if (op.trim().equals("addcategory")) {
                 // add category
                 // fetching category data
-                String title = request.getParameter("catTitle");
-                String description = request.getParameter("catDescription");
+                String title = request.getParameter("categoryTitle");
+                String description = request.getParameter("categoryDescription");
 
                 Category category = new Category();
                 category.setCategoryTitle(title);
@@ -58,10 +59,43 @@ public class ProductOperationServlet extends HttpServlet {
                 // out.println("Category Saved");
                 HttpSession httpSession = request.getSession();
                 httpSession.setAttribute("message", "Category added successfully : " + catId);
-                response.sendRedirect("admin.jsp");
+                response.sendRedirect("categoryCRUD.jsp");
                 return;
 
-            } else if (op.trim().equals("addproduct")) {
+            } else if (op != null && op.trim().equals("deletecategory")) {
+                // Delete category
+                int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+
+                CategoryDao categoryDao = new CategoryDao(FactoryProvider.getFactory());
+                categoryDao.deleteCategory(categoryId);
+
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("message", "Category deleted successfully: " + categoryId);
+                response.sendRedirect("categoryCRUD.jsp");
+                return;
+            }else if (op != null && op.trim().equals("updatecategory")) {
+                // Update category
+                int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+                String title = request.getParameter("categoryTitle");
+                String description = request.getParameter("categoryDescription");
+
+                CategoryDao categoryDao = new CategoryDao(FactoryProvider.getFactory());
+                Category category = categoryDao.getCategoryById(categoryId);
+
+                if (category != null) {
+                    category.setCategoryTitle(title);
+                    category.setCategoryDescription(description);
+                    categoryDao.updateCategory(category);
+
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("message", "Category updated successfully: " + categoryId);
+                } else {
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("message", "Category not found with ID: " + categoryId);
+                }
+                response.sendRedirect("categoryCRUD.jsp");
+                return;
+            }else if (op.trim().equals("addproduct")) {
                 // add product
                 // work
                 String pName = request.getParameter("pName");

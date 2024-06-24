@@ -5,6 +5,7 @@ dao\CartItemsDao.class
 login\LoginBean.class
 dao\UserDao.class
 helper\Helper.class
+servlet\OrdersOperationServlet.class
 servlet\ProductOperationServlet.class
 servlet\LoginServlet.class
 entity\Category.class

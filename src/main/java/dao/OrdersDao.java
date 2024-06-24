@@ -11,61 +11,99 @@ import entity.Orders;
 
 public class OrdersDao {
 
-    private SessionFactory factory;
+    private final SessionFactory factory;
 
     public OrdersDao(SessionFactory factory) {
         this.factory = factory;
     }
 
-    //saves the category to db
-    @SuppressWarnings("deprecation")
-    public int saveOrders(Orders order) {
-
-        Session session = this.factory.openSession();
-        Transaction tx = session.beginTransaction();
-        int order_id = (int) session.save(order);
-        tx.commit();
-        session.close();
-        return order_id;
-    }
-
-    @SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
-    public List<Orders> getAllOrders() {
-        Session s = null;
+    public boolean saveOrders(Orders orders) {
+        boolean saved = false;
+        Session session = factory.openSession();
         Transaction tx = null;
-        List<Orders> list = null;
         try {
-            s = this.factory.openSession();
-            tx = s.beginTransaction();
-            Query<Orders> query = s.createQuery("from Orders", Orders.class);
-            list = query.list();
+            tx = session.beginTransaction();
+            session.save(orders);
             tx.commit();
+            saved = true;
         } catch (Exception e) {
             if (tx != null) {
                 tx.rollback();
             }
             e.printStackTrace();
         } finally {
-            if (s != null) {
-                s.close();
-            }
+            session.close();
         }
+        return saved;
+    }
+
+    @SuppressWarnings({ "deprecation", "rawtypes" })
+    public List<Orders> getAllOrders() {
+        Session s = this.factory.openSession();
+        Query query = s.createQuery("from Orders");
+        @SuppressWarnings("unchecked")
+        List<Orders> list = query.list();
         return list;
     }
-    
-    public Orders getOrdersById(int order_id) {
-        Orders order = null;
+
+    public Orders getOrdersById(int orderId) {
+        Session session = factory.openSession();
+        Orders orders = session.get(Orders.class, orderId);
+        session.close();
+        return orders;
+    }
+
+    public boolean deleteOrdersById(int orderId) {
+        boolean deleted = false;
+        Session session = factory.openSession();
+        Transaction tx = null;
         try {
-
-            Session session = this.factory.openSession();
-            order = session.get(Orders.class, order_id);
-            session.close();
-
+            tx = session.beginTransaction();
+            Orders orders = session.get(Orders.class, orderId);
+            if (orders != null) {
+                session.delete(orders);
+                tx.commit();
+                deleted = true;
+            }
         } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
             e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return deleted;
+    }
+
+        // Siparis durumu arayarak siparisleri getir
+        @SuppressWarnings({ "deprecation", "unchecked", "rawtypes" })
+        public List<Orders> searchOrdersByStatus(String orderStatus) {
+            Session s = this.factory.openSession();
+            Query query = s.createQuery("from Orders as o where o.orderStatus like :orderStatus");
+            query.setParameter("orderStatus", "%" + orderStatus + "%");
+            List<Orders> list = query.list();
+            s.close();
+            return list;
         }
 
-        return order;
+    public boolean updateOrders(Orders orders) {
+        boolean updated = false;
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(orders);
+            tx.commit();
+            updated = true;
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return updated;
     }
-    // Diğer metodlar (güncelleme, silme vb.) buraya eklenebilir
 }

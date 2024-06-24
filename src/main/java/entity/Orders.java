@@ -1,7 +1,7 @@
 package entity;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders") // Veritabanı tablo adı belirtiliyor
 public class Orders {
 
     @Id
@@ -25,29 +25,19 @@ public class Orders {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "total_amount", precision = 10, scale = 2)
-    private BigDecimal total_amount;
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
-    @Column(name = "order_status", length = 50)
+    @Column(name = "order_status")
     private String orderStatus;
 
-    @Column(name = "payment_method", length = 50)
+    @Column(name = "payment_method")
     private String paymentMethod;
 
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    // Constructors, getters, setters
-
-    public Orders() {
-    }
-
-    public Orders(User user, BigDecimal total_amount, String orderStatus, String paymentMethod) {
-        this.user = user;
-        this.total_amount = total_amount;
-        this.orderStatus = orderStatus;
-        this.paymentMethod = paymentMethod;
-    }
+    // Getter ve setter metotları
 
     public int getOrderId() {
         return orderId;
@@ -66,11 +56,11 @@ public class Orders {
     }
 
     public BigDecimal getTotalAmount() {
-        return total_amount;
+        return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimal total_amount) {
-        this.total_amount = total_amount;
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public String getOrderStatus() {
@@ -89,11 +79,25 @@ public class Orders {
         this.paymentMethod = paymentMethod;
     }
 
-    public Timestamp getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // toString metodu
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "orderId=" + orderId +
+                ", user=" + user +
+                ", totalAmount=" + totalAmount +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

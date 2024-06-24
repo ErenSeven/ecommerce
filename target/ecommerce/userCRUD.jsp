@@ -63,10 +63,10 @@
                                         <a class="nav-link sidebar-link" href="categoryCRUD.jsp">Kategoriler</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link sidebar-link" href="siparisler.jsp">Siparişler</a>
+                                        <a class="nav-link sidebar-link" href="ordersCRUD.jsp">Siparişler</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link sidebar-link" href="urunler.jsp">Ürünler</a>
+                                        <a class="nav-link sidebar-link" href="productCRUD.jsp">Ürünler</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link sidebar-link" href="userCRUD.jsp">Kullanıcılar</a>
@@ -83,7 +83,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <form action="userCRUD.jsp" method="GET" class="form-inline mb-3">
-                                                    <input type="text" name="search" class="form-control mr-sm-2" placeholder="Kategori Başlığı Ara">
+                                                    <input type="text" name="search" class="form-control mr-sm-2" placeholder="Kullanıcı adıyla ara">
                                                     <button type="submit" class="btn btn-outline-success">Ara</button>
                                                 </form>
                                                 <table class="table table-striped">

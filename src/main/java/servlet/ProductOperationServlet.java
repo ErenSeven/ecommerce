@@ -5,10 +5,7 @@
  */
 package servlet;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 
 import dao.CategoryDao;
@@ -23,7 +20,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
 @MultipartConfig(// ilk sorun buradan kaynakl�. Buras� olmad���nda 400 hata kodlar� al�n�yor
         fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -95,65 +91,82 @@ public class ProductOperationServlet extends HttpServlet {
                 }
                 response.sendRedirect("categoryCRUD.jsp");
                 return;
-            }else if (op.trim().equals("addproduct")) {
-                // add product
-                // work
+            }else if (op != null && op.trim().equals("addproduct")) {
+                // Add product
                 String pName = request.getParameter("pName");
                 String pDesc = request.getParameter("pDesc");
                 int pPrice = Integer.parseInt(request.getParameter("pPrice"));
                 int pQuantity = Integer.parseInt(request.getParameter("pQuantity"));
                 int catId = Integer.parseInt(request.getParameter("catId"));
-                Part part = request.getPart("pPhoto");
+                String pPhoto = request.getParameter("pPhoto");
 
                 Product p = new Product();
                 p.setpName(pName);
                 p.setpDesc(pDesc);
                 p.setpPrice(pPrice);
                 p.setpQuantity(pQuantity);
-                p.setpPhoto(part.getSubmittedFileName());
+                p.setpPhoto(pPhoto);
 
                 // get category by id
-                CategoryDao cdoa = new CategoryDao(FactoryProvider.getFactory());
-                Category category = cdoa.getCategoryById(catId);
-
+                Category category = new Category();
+                category.setCategoryId(catId);
                 p.setCategory(category);
 
                 // product save...
                 ProductDao pdao = new ProductDao(FactoryProvider.getFactory());
                 pdao.saveProduct(p);
 
-                // pic upload
-                // find out the path to upload photo
-                request.getSession().getServletContext().getRealPath("img");
-                String path = request.getSession().getServletContext().getRealPath("img") + File.separator + "products"
-                        + File.separator + part.getSubmittedFileName();
-                System.out.println(path);
-
-                // uploading code..
-                try {
-
-                    FileOutputStream fos = new FileOutputStream(path);
-
-                    InputStream is = part.getInputStream();
-
-                    // reading data
-                    byte[] data = new byte[is.available()];
-
-                    is.read(data);
-
-                    // writing the data
-                    fos.write(data);
-
-                    fos.close();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                out.println("Product save sucess...");
                 HttpSession httpSession = request.getSession();
                 httpSession.setAttribute("message", "Product is added successfully..");
-                response.sendRedirect("admin.jsp");
+                response.sendRedirect("productCRUD.jsp");
+                return;
+
+            }
+            else if (op != null && op.trim().equals("deleteproduct")) {
+                // Delete product
+                int productId = Integer.parseInt(request.getParameter("productId"));
+
+                ProductDao productDao = new ProductDao(FactoryProvider.getFactory());
+                productDao.deleteProductById(productId);
+
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("message", "Product deleted successfully: " + productId);
+                response.sendRedirect("productCRUD.jsp");
+                return;
+            } else if (op != null && op.trim().equals("updateproduct")) {
+                // Update product
+                int productId = Integer.parseInt(request.getParameter("productId"));
+                String pName = request.getParameter("pName");
+                String pDesc = request.getParameter("pDesc");
+                int pPrice = Integer.parseInt(request.getParameter("pPrice"));
+                int pQuantity = Integer.parseInt(request.getParameter("pQuantity"));
+                int catId = Integer.parseInt(request.getParameter("catId"));
+                String pPhoto = request.getParameter("pPhoto");
+
+                ProductDao pdao = new ProductDao(FactoryProvider.getFactory());
+                Product p = pdao.getProductById(productId);
+
+                if (p != null) {
+                    p.setpName(pName);
+                    p.setpDesc(pDesc);
+                    p.setpPrice(pPrice);
+                    p.setpQuantity(pQuantity);
+                    p.setpPhoto(pPhoto);
+
+                    // get category by id
+                    Category category = new Category();
+                    category.setCategoryId(catId);
+                    p.setCategory(category);
+
+                    pdao.updateProduct(p);
+
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("message", "Product updated successfully: " + productId);
+                } else {
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("message", "Product not found with ID: " + productId);
+                }
+                response.sendRedirect("productCRUD.jsp");
                 return;
 
             }

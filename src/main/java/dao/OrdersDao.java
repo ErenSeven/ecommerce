@@ -53,6 +53,29 @@ public class OrdersDao {
         return orders;
     }
 
+    @SuppressWarnings({ "deprecation", "rawtypes" })
+    public List<Orders> getOrdersByUserId(int userId) {
+        Session session = this.factory.openSession();
+        List<Orders> ordersList = null;
+        try {
+            System.out.println("Getting orders for user id: " + userId); // Debugging
+    
+            Query query = session.createQuery("FROM Orders WHERE user.id = :userId");
+            query.setParameter("userId", userId);
+            ordersList = query.list();
+    
+            if (ordersList.isEmpty()) {
+                System.out.println("No orders found for user id: " + userId); // Debugging
+            } else {
+                System.out.println("Orders found: " + ordersList.size()); // Debugging
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return ordersList;
+    }
     public boolean deleteOrdersById(int orderId) {
         boolean deleted = false;
         Session session = factory.openSession();

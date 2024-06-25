@@ -55,6 +55,11 @@ User user1 = (User) session.getAttribute("current-user");
                                             <a class="nav-link" href="register.jsp">Register</a>
                                         </li>
                                     <% } else { %>
+                                    
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="userOrder.jsp">Siparislerim</a>
+                                        </li>
+                                        
                                         <li class="nav-item active">
                                             <a class="nav-link" href="./LogoutServlet">Logout</a>
                                         </li>
